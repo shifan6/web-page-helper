@@ -15,7 +15,7 @@ const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onEx
     }
   }
   return (
-    <div className="config-list">
+    <div className="config-list" data-component="config-list">
       {
         list.map(config => {
           return (

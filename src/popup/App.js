@@ -8,7 +8,7 @@ function App({ configs, hostname }) {
   const [ view, setView ] = useState('config-list')
   const [ currentConfig, setCurrentConfig ] = useState({})
   const currentPageConfigs = pageConfigs.filter(config => {
-    return config.page === 'common' || config.page.includes(hostname)
+    return config.page === 'common' || (hostname && config.page.includes(hostname))
   })
 
   const sendMessageToContent = function (message, config) {

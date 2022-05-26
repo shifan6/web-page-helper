@@ -42,7 +42,8 @@
   color: #666;
 }
 
-.config-buttons {
+
+[data-component=config-list] .config-buttons {
   display: flex;
   align-items: center;
   border-top: 1px solid #ccc;
