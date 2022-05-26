@@ -1,0 +1,6 @@
+@import '~antd/dist/antd.css';
+
+.ant-btn-sm {
+  font-size: 13px;
+  padding: 0 4px;
+}

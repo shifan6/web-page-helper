@@ -1,0 +1,82 @@
+.config-detail {
+  text-align: left;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.config-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.config-row .label {
+  flex: 0 0 70px;
+}
+
+.config-row label {
+  margin-right: 10px;
+  min-width: 50px;
+  cursor: pointer;
+}
+
+.config-row input[type=radio] {
+  margin-right: 5px;
+}
+
+.config-row .name {
+  width: 250px;
+  height: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  padding: 0 5px;
+}
+
+.config-row .content {
+  width: 250px;
+  resize: none;
+  height: 100px;
+  border: 1px solid #ccc;
+  outline: none;
+  padding: 5px;
+}
+
+.config-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.remove {
+  color: #f56c6c;
+  cursor: pointer;
+}
+
+.remove:hover {
+  color: #ff6e6e
+}
+
+.cancel {
+  color: #666;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.cancel:hover {
+  color: #444;
+}
+
+.save {
+  color: #409eff;
+  cursor: pointer;
+}
+
+.save:hover {
+  color: #66b1ff;
+}
+

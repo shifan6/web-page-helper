@@ -1,0 +1,53 @@
+.list-item {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-size: 13px;
+  line-height: 30px;
+}
+
+.list-item .main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.list-item .tag {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  background-color: #ecf5ff;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  color: #409eff;
+  height: 18px;
+  padding: 0 4px;
+  line-height: 16px;
+  font-size: 10px;
+}
+
+.list-item .type {
+  background-color: #f4f4f5;
+  border-color: #e9e9eb;
+  color: #909399;
+}
+
+.ant-switch-small {
+   margin-left: 4px;
+}
+
+.config-empty {
+  line-height: 50px;
+  font-size: 14px;
+  color: #666;
+}
+
+.config-buttons {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  margin-top: 15px;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 13px;
+}
