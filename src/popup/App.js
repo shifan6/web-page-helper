@@ -20,11 +20,7 @@ function App({ configs, location }) {
   }
 
   const updatePageConfigStorage = function (newConfigs) {
-    chrome.storage.sync.set({ 'pageConfigs': newConfigs }, () => {
-      chrome.storage.sync.get('pageConfigs', (storage) => {
-        console.log(storage)
-      })
-    })
+    chrome.storage.sync.set({ 'pageConfigs': newConfigs })
   }
 
   const closeConfig = function (config) {
@@ -37,8 +33,8 @@ function App({ configs, location }) {
         break
     }
     config.auto = false
-    setPageConfigs([... pageConfigs])
-    updatePageConfigStorage([... pageConfigs])
+    setPageConfigs([...pageConfigs])
+    updatePageConfigStorage(pageConfigs)
   }
 
   const openConfig = function (config) {
@@ -52,7 +48,7 @@ function App({ configs, location }) {
     }
     config.auto = true
     setPageConfigs([... pageConfigs])
-    updatePageConfigStorage([... pageConfigs])
+    updatePageConfigStorage(pageConfigs)
   }
   
   const runConfig = function (config) {
@@ -85,8 +81,8 @@ function App({ configs, location }) {
       newConfigs.push(config)
     }
     setView('config-list')
-    setPageConfigs([... newConfigs])
-    updatePageConfigStorage([... newConfigs])
+    setPageConfigs(newConfigs)
+    updatePageConfigStorage(newConfigs)
   }
 
   const cancelEdit = function () {
@@ -98,8 +94,8 @@ function App({ configs, location }) {
     const index = newConfigs.findIndex(it => it.id === id)
     newConfigs.splice(index, 1)
     setView('config-list')
-    setPageConfigs([... newConfigs])
-    updatePageConfigStorage([... newConfigs])
+    setPageConfigs(newConfigs)
+    updatePageConfigStorage(newConfigs)
   }
   
   const importConfig = function (file) {
@@ -111,8 +107,8 @@ function App({ configs, location }) {
       pageConfigs.forEach(it => info['key-' + it.id] = it)
       json.pageConfigs.forEach(it => info['key-' + it.id] = it)
       const newConfigs = Object.keys(info).map(key => info[key])
-      setPageConfigs([...newConfigs])
-      updatePageConfigStorage([...newConfigs])
+      setPageConfigs(newConfigs)
+      updatePageConfigStorage(newConfigs)
     }
     reader.readAsText(file)
   }
