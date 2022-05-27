@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import ConfigList from './components/ConfigList'
 import ConfigDetail from './components/ConfigDetail'
 
-function App({ configs, hostname }) {
+function App({ configs, location }) {
+  const hostname = location && location.hostname.replace('www.', '')
   const [ pageConfigs, setPageConfigs ] = useState(configs || [])
   const [ view, setView ] = useState('config-list')
   const [ currentConfig, setCurrentConfig ] = useState({})
@@ -18,8 +19,12 @@ function App({ configs, hostname }) {
     })
   }
 
-  const updatePageConfigStorage = function () {
-    chrome.storage.sync.set({ 'pageConfigs': pageConfigs })
+  const updatePageConfigStorage = function (newConfigs) {
+    chrome.storage.sync.set({ 'pageConfigs': newConfigs }, () => {
+      chrome.storage.sync.get('pageConfigs', (storage) => {
+        console.log(storage)
+      })
+    })
   }
 
   const closeConfig = function (config) {
@@ -33,7 +38,7 @@ function App({ configs, hostname }) {
     }
     config.auto = false
     setPageConfigs([... pageConfigs])
-    updatePageConfigStorage()
+    updatePageConfigStorage([... pageConfigs])
   }
 
   const openConfig = function (config) {
@@ -47,7 +52,7 @@ function App({ configs, hostname }) {
     }
     config.auto = true
     setPageConfigs([... pageConfigs])
-    updatePageConfigStorage()
+    updatePageConfigStorage([... pageConfigs])
   }
   
   const runConfig = function (config) {
@@ -81,7 +86,7 @@ function App({ configs, hostname }) {
     }
     setView('config-list')
     setPageConfigs([... newConfigs])
-    updatePageConfigStorage()
+    updatePageConfigStorage([... newConfigs])
   }
 
   const cancelEdit = function () {
@@ -94,7 +99,7 @@ function App({ configs, hostname }) {
     newConfigs.splice(index, 1)
     setView('config-list')
     setPageConfigs([... newConfigs])
-    updatePageConfigStorage()
+    updatePageConfigStorage([... newConfigs])
   }
   
   const importConfig = function (file) {
@@ -106,8 +111,8 @@ function App({ configs, hostname }) {
       pageConfigs.forEach(it => info['key-' + it.id] = it)
       json.pageConfigs.forEach(it => info['key-' + it.id] = it)
       const newConfigs = Object.keys(info).map(key => info[key])
-      setPageConfigs(newConfigs)
-      updatePageConfigStorage()
+      setPageConfigs([...newConfigs])
+      updatePageConfigStorage([...newConfigs])
     }
     reader.readAsText(file)
   }

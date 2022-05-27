@@ -11,11 +11,11 @@ const getConfigsFromStorage = function () {
   })
 }
 
-const getCurrentHostName = function() {
+const getCurrentLocation = function() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
       chrome.tabs.sendMessage(tabs[0].id, { message: "location" }, location => {
-        resolve(location ? location.hostname.replace('www.', '') : '')
+        resolve(location)
       })
     })
   })
@@ -23,9 +23,9 @@ const getCurrentHostName = function() {
 
 const init = async function () {
   const configs = await getConfigsFromStorage()
-  const hostname = await getCurrentHostName()
+  const location = await getCurrentLocation()
   const root = ReactDOM.createRoot(document.getElementById('root'))
-  root.render(<App configs={ configs } hostname={ hostname } />)
+  root.render(<App configs={ configs } location={ location } />)
 }
 
 init()
