@@ -13,7 +13,7 @@ function App({ configs, location }) {
   const [ currentConfig, setCurrentConfig ] = useState({})
   const currentPageConfigs = pageConfigs.filter(config => {
     const { apply = 'site', page } = config
-    return page === 'common' || (hostname && apply === 'site' && page.includes(hostname)) || (pageUrl && apply === 'url' && page === pageUrl)
+    return page === 'common' || (hostname && apply === 'site' && page === hostname) || (pageUrl && apply === 'url' && page === pageUrl)
   })
 
   const sendMessageToContent = function (message, config) {

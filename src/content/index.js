@@ -91,7 +91,8 @@
       auto: false,  // 是否自动执行
     }
   ]
-  const hostname = window.location.hostname
+  const hostname = location.hostname
+  const pageUrl = location.host + location.pathname
   const addStyle = function(it) {
     const { id, content } = it
     removeStyle(id)
@@ -151,9 +152,9 @@
 
   const initPage = function() {
     pageConfigs.forEach(config => {
-      const { page, auto, type } = config
-      if (!hostname.includes(page) && page !== 'common') { return }
+      const { page, auto, type, apply = 'site' } = config
       if (!auto) { return }
+      if (!(page === 'common' || (apply === 'site' && hostname.includes(page)) || (apply === 'url' && pageUrl.includes(page)))) { return }
       if (type === 'style') {
         addStyle(config)
       }
