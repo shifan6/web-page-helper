@@ -1,14 +1,15 @@
 import './ConfigDetail.css'
 import React, { useState } from 'react'
 
-const ConfigDetail = function ({ config, hostname, onSave, onCancel, onRemove }) {
+const ConfigDetail = function ({ config, hostname, pageUrl, onSave, onCancel, onRemove }) {
   const [ info, setInfo ] = useState(config)
   const handleValueChange = function (value, prop) {
     switch (prop) {
-      case 'common':
+      case 'apply':
         setInfo({
           ...info,
-          page: value ? 'common' : hostname
+          [prop]: value,
+          page: value === 'common' ? 'common' : value === 'site' ? hostname : pageUrl
         })
         break
       default:
@@ -26,7 +27,7 @@ const ConfigDetail = function ({ config, hostname, onSave, onCancel, onRemove })
         <input
           className="name"
           type="text"
-          maxLength="8"
+          maxLength="10"
           value={ info.name }
           onChange={ (e) => { handleValueChange(e.target.value, 'name') }}
         />
@@ -51,22 +52,30 @@ const ConfigDetail = function ({ config, hostname, onSave, onCancel, onRemove })
         </label>
       </div>
       <div className="config-row">
-        <span className="label">是否通用</span>
+        <span className="label">适用页面</span>
         <label>
           <input
             type="radio"
-            checked={ info.page === 'common' }
-            onChange={ (e) => { handleValueChange(true, 'common') }}
+            checked={ info.page === 'common'}
+            onChange={ (e) => { handleValueChange('common', 'apply') }}
           />
-          是
+          所有网站
         </label>
         <label>
           <input
             type="radio"
-            checked={ info.page !== 'common' }
-            onChange={ (e) => { handleValueChange(false, 'common') }}
+            checked={ info.apply === 'site' }
+            onChange={ (e) => { handleValueChange('site', 'apply') }}
           />
-          否
+          当前网站
+        </label>
+        <label>
+          <input
+            type="radio"
+            checked={ info.apply === 'url' }
+            onChange={ (e) => { handleValueChange('url', 'apply') }}
+          />
+          当前网址
         </label>
       </div>
       <div className="config-row">

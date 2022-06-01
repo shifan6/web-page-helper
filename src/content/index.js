@@ -22,7 +22,7 @@
       name: '隐藏Logo',
       page: 'douban.com',
       type: 'style',
-      content: '.nav-logo { display: none }; .nav-primary { padding-bottom: 20px!important; }',
+      content: '.nav-logo { display: none } .nav-primary { padding-bottom: 20px!important; }',
       auto: false,
     },
     {

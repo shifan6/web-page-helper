@@ -6,12 +6,14 @@ import fileUtils from './utils/file'
 import { message } from 'antd'
 
 function App({ configs, location }) {
+  const pageUrl = location && (location.host + location.pathname).replace('www.', '')
   const hostname = location && location.hostname.replace('www.', '')
   const [ pageConfigs, setPageConfigs ] = useState(configs || [])
   const [ view, setView ] = useState('config-list')
   const [ currentConfig, setCurrentConfig ] = useState({})
   const currentPageConfigs = pageConfigs.filter(config => {
-    return config.page === 'common' || (hostname && config.page.includes(hostname))
+    const { apply = 'site', page } = config
+    return page === 'common' || (hostname && apply === 'site' && page.includes(hostname)) || (pageUrl && apply === 'url' && page === pageUrl)
   })
 
   const sendMessageToContent = function (message, config) {
@@ -58,8 +60,13 @@ function App({ configs, location }) {
   }
 
   const editConfig = function (config) {
+    const { page, apply } = config
+    const detail = {
+      ...config,
+      apply: apply || (page === 'common' && 'common') || 'site'
+    }
     setView('config-detail')
-    setCurrentConfig(config)
+    setCurrentConfig(detail)
   }
 
   const addConfig = function () {
@@ -68,6 +75,7 @@ function App({ configs, location }) {
       name: '',
       type: 'style',
       page: hostname,
+      apply: 'site',
       auto: false,
       content: ''
     })
@@ -157,6 +165,7 @@ function App({ configs, location }) {
         <ConfigDetail
           config={ currentConfig }
           hostname={ hostname }
+          pageUrl={ pageUrl }
           onSave={ saveConfig }
           onCancel={ cancelEdit }
           onRemove={ removeConfig }
