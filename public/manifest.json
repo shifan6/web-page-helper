@@ -1,7 +1,7 @@
 {
   "name": "Web Page Helper",
   "description": "Config and inject style or script to web page.",
-  "version": "2.0",
+  "version": "2.1",
   "manifest_version": 2,
 
   "icons": {

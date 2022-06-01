@@ -70,6 +70,7 @@ const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onEx
           <Upload
             showUploadList={ false }
             beforeUpload={ (file) => { onImport(file); return false  }}
+            accept=".json"
           >
             <Button
               type="link"

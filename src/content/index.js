@@ -124,6 +124,17 @@
     script.outerText = ''
   }
 
+  const downloadFileByUrl = function ({ url, name }) {
+    const a = document.createElement("a")
+    document.body.appendChild(a)
+    a.style.display = 'none'
+    a.href = url
+    a.download = name
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
+  }
+
   const setPageConfigs = function() {
     return new Promise((resolve, reject) => {
       chrome.storage.sync.get('pageConfigs', (storage) => {
@@ -169,6 +180,8 @@
       case 'removeStyle':
         removeStyle(request.data.id)
         break
+      case 'download':
+        downloadFileByUrl(request.data)
     }
   });
 

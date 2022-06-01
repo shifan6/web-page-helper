@@ -2,6 +2,8 @@ import './App.css'
 import React, { useState } from 'react'
 import ConfigList from './components/ConfigList'
 import ConfigDetail from './components/ConfigDetail'
+import fileUtils from './utils/file'
+import { message } from 'antd'
 
 function App({ configs, location }) {
   const hostname = location && location.hostname.replace('www.', '')
@@ -100,6 +102,10 @@ function App({ configs, location }) {
   
   const importConfig = function (file) {
     if (!file) { return }
+    if (file.name.split(".").pop().toLowerCase() != 'json') {
+      message.warning('仅支持导入json文件', 1)
+      return
+    }
     const reader = new FileReader()
     reader.onload = function fileReadCompleted() {
       const json = JSON.parse(reader.result)
@@ -113,21 +119,22 @@ function App({ configs, location }) {
     reader.readAsText(file)
   }
   
-  const exportConfig = function () {
+  const exportConfig = async function () {
     const data = JSON.stringify({
       pageConfigs: pageConfigs
     }, undefined, 4)
 
     const blob = new Blob([data], { type: "text/json" })
-    const a = document.createElement("a")
-    const url = window.URL.createObjectURL(blob)
-    document.body.appendChild(a)
-    a.style.display = 'none'
-    a.href = url
-    a.download = 'web-page-helper 插件配置.json'
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
+    const url = await fileUtils.getBase64ByBlob(blob)
+    chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        message: 'download',
+        data: {
+          url,
+          name: 'web-page-helper 插件配置.json'
+        }
+      })
+    })
   }
 
   return (
