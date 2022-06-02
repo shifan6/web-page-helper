@@ -13,13 +13,16 @@ function App({ configs, location }) {
   const [ currentConfig, setCurrentConfig ] = useState({})
   const currentPageConfigs = pageConfigs.filter(config => {
     const { apply = 'site', page } = config
-    return page === 'common' || (hostname && apply === 'site' && page === hostname) || (pageUrl && apply === 'url' && page === pageUrl)
+    return page === 'common' || (apply === 'site' && page === hostname) || (apply === 'url' && page === pageUrl)
   })
 
-  const sendMessageToContent = function (message, config) {
+  const sendMessageToContent = function (message, config, applyAll = true) {
     const { id, content } = config
-    chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { message: message, data: { id, content } })
+    const queryInfo = applyAll ? {} : { currentWindow: true, active: true }
+    chrome.tabs.query(queryInfo, (tabs) => {
+      [...tabs].forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, { message: message, data: { id, content } })
+      })
     })
   }
 
@@ -28,35 +31,21 @@ function App({ configs, location }) {
   }
 
   const closeConfig = function (config) {
-    switch (config.type) {
-      case 'style':
-        sendMessageToContent('removeStyle', config)
-        break
-      case 'script':
-        sendMessageToContent('removeScript', config)
-        break
-    }
     config.auto = false
     setPageConfigs([...pageConfigs])
     updatePageConfigStorage(pageConfigs)
+    updateContentByConfig(config)
   }
 
   const openConfig = function (config) {
-    switch (config.type) {
-      case 'style':
-        sendMessageToContent('addStyle', config)
-        break
-      case 'script':
-        sendMessageToContent('addScript', config)
-        break
-    }
     config.auto = true
     setPageConfigs([... pageConfigs])
     updatePageConfigStorage(pageConfigs)
+    updateContentByConfig(config)
   }
   
   const runConfig = function (config) {
-    sendMessageToContent('addScript', config)
+    sendMessageToContent('addScript', config, false)
   }
 
   const editConfig = function (config) {
@@ -93,6 +82,26 @@ function App({ configs, location }) {
     setView('config-list')
     setPageConfigs(newConfigs)
     updatePageConfigStorage(newConfigs)
+    updateContentByConfig(config)
+  }
+  
+  const updateContentByConfig = function (config) {
+    const { auto, type } = config
+    const name = `${ type }-${ auto ? 'add' : 'remove'}`
+    switch (name) {
+      case 'style-add':
+        sendMessageToContent('addStyle', config)
+        break
+      case 'script-add':
+        sendMessageToContent('addScript', config)
+        break
+      case 'style-remove':
+        sendMessageToContent('removeStyle', config)
+        break
+      case 'script-remove':
+        sendMessageToContent('removeScript', config)
+        break
+    }
   }
 
   const cancelEdit = function () {
