@@ -167,7 +167,7 @@ function App({ configs, location }) {
           })
         }
         return result
-      }, [...pageConfigs])
+      }, [...Object.values(origin)])
 
       // 更新配置、缓存（不用更新视图，因为新增的配置均是默认关闭）
       setPageConfigs(newConfigs)
