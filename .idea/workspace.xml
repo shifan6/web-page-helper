@@ -39,20 +39,26 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/popup/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="15" column="112" lean-forward="false" selection-start-line="15" selection-start-column="112" selection-end-line="15" selection-end-column="112" />
+            <state relative-caret-position="201">
+              <caret line="89" column="55" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="55" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#658#820#0" expanded="true" />
                 <element signature="e#898#1193#0" expanded="true" />
                 <element signature="e#1054#1188#0" expanded="true" />
                 <element signature="e#1087#1181#0" expanded="true" />
                 <element signature="e#1251#1315#0" expanded="true" />
                 <element signature="e#1357#1498#0" expanded="true" />
                 <element signature="e#1539#1680#0" expanded="true" />
-                <element signature="e#2285#2704#0" expanded="true" />
-                <element signature="e#2758#3244#0" expanded="true" />
-                <element signature="e#3884#4221#0" expanded="true" />
-                <element signature="e#4569#4743#0" expanded="true" />
+                <element signature="e#2061#2242#0" expanded="true" />
+                <element signature="e#2285#2697#0" expanded="true" />
+                <element signature="e#3666#5418#0" expanded="true" />
+                <element signature="e#3900#5386#0" expanded="true" />
+                <element signature="e#4083#4252#0" expanded="true" />
+                <element signature="e#4342#4511#0" expanded="true" />
+                <element signature="e#4611#5199#0" expanded="true" />
+                <element signature="e#5734#5908#0" expanded="true" />
+                <element signature="e#5949#6285#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -85,11 +91,15 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/content/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="156" column="112" lean-forward="false" selection-start-line="156" selection-start-column="112" selection-end-line="156" selection-end-column="112" />
+            <state relative-caret-position="936">
+              <caret line="70" column="54" lean-forward="false" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="54" />
               <folding>
-                <element signature="e#3038#3364#0" expanded="true" />
-                <element signature="e#3567#3840#0" expanded="true" />
+                <element signature="e#225#551#0" expanded="true" />
+                <element signature="e#754#1027#0" expanded="true" />
+                <element signature="e#1570#1723#0" expanded="true" />
+                <element signature="e#1630#1716#0" expanded="true" />
+                <element signature="e#1760#2149#0" expanded="true" />
+                <element signature="e#1796#2144#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -117,9 +127,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>extensionDefaultConfigs</find>
-      <find>defaultConfig</find>
-      <find>chrome.storage.sync</find>
       <find>background</find>
       <find>console</find>
       <find>no-co</find>
@@ -133,7 +140,6 @@
       <find>auto</find>
       <find>handleAutoChange</find>
       <find>PoweroffOutlined</find>
-      <find>defaultConfigs</find>
       <find>save</find>
       <find>pageConfigs</find>
       <find>setPageConfigs</find>
@@ -147,6 +153,10 @@
       <find>handleValueChange</find>
       <find>chrome.tabs.query</find>
       <find>sendMessageToContent</find>
+      <find>updateContentByConfig</find>
+      <find>defaultConfigs</find>
+      <find>getUniqueId</find>
+      <find>defa</find>
     </findStrings>
     <replaceStrings>
       <replace>defaultConfig</replace>
@@ -368,12 +378,12 @@
       <workItem from="1653446819212" duration="35004000" />
       <workItem from="1653560138609" duration="7316000" />
       <workItem from="1653872161311" duration="598000" />
-      <workItem from="1654062523019" duration="23456000" />
+      <workItem from="1654062523019" duration="26308000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67288000" />
+    <option name="totallyTimeSpent" value="70140000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -779,31 +789,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/content/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="156" column="112" lean-forward="false" selection-start-line="156" selection-start-column="112" selection-end-line="156" selection-end-column="112" />
+        <state relative-caret-position="936">
+          <caret line="70" column="54" lean-forward="false" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="54" />
           <folding>
-            <element signature="e#3038#3364#0" expanded="true" />
-            <element signature="e#3567#3840#0" expanded="true" />
+            <element signature="e#225#551#0" expanded="true" />
+            <element signature="e#754#1027#0" expanded="true" />
+            <element signature="e#1570#1723#0" expanded="true" />
+            <element signature="e#1630#1716#0" expanded="true" />
+            <element signature="e#1760#2149#0" expanded="true" />
+            <element signature="e#1796#2144#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/popup/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="15" column="112" lean-forward="false" selection-start-line="15" selection-start-column="112" selection-end-line="15" selection-end-column="112" />
+        <state relative-caret-position="201">
+          <caret line="89" column="55" lean-forward="false" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="55" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#658#820#0" expanded="true" />
             <element signature="e#898#1193#0" expanded="true" />
             <element signature="e#1054#1188#0" expanded="true" />
             <element signature="e#1087#1181#0" expanded="true" />
             <element signature="e#1251#1315#0" expanded="true" />
             <element signature="e#1357#1498#0" expanded="true" />
             <element signature="e#1539#1680#0" expanded="true" />
-            <element signature="e#2285#2704#0" expanded="true" />
-            <element signature="e#2758#3244#0" expanded="true" />
-            <element signature="e#3884#4221#0" expanded="true" />
-            <element signature="e#4569#4743#0" expanded="true" />
+            <element signature="e#2061#2242#0" expanded="true" />
+            <element signature="e#2285#2697#0" expanded="true" />
+            <element signature="e#3666#5418#0" expanded="true" />
+            <element signature="e#3900#5386#0" expanded="true" />
+            <element signature="e#4083#4252#0" expanded="true" />
+            <element signature="e#4342#4511#0" expanded="true" />
+            <element signature="e#4611#5199#0" expanded="true" />
+            <element signature="e#5734#5908#0" expanded="true" />
+            <element signature="e#5949#6285#0" expanded="true" />
           </folding>
         </state>
       </provider>
