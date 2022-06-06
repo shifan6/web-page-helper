@@ -2,9 +2,11 @@
   let pageConfigs
   const hostname = location && location.hostname.replace('www.', '')
   const pageUrl = location && (location.host + location.pathname).replace('www.', '')
+
   const addStyle = function(it) {
-    const { id, content } = it
+    const { id, content, page, apply = 'site' } = it
     removeStyle(id)  // 先清除已注入的样式
+    if (!(page === 'common' || (apply === 'site' && hostname === page) || (apply === 'url' && pageUrl === page))) { return }
     const head = document.querySelector('head')
     const style = document.createElement('style')
     style.type = 'text/css'
@@ -20,7 +22,8 @@
   }
 
   const addScript = function(it) {
-    const { id, content } = it
+    const { id, content, page, apply = 'site' } = it
+    if (!(page === 'common' || (apply === 'site' && hostname === page) || (apply === 'url' && pageUrl === page))) { return }
     removeScript(id)  // 先清除已注入的脚本
     const head = document.querySelector('head')
     const script = document.createElement('script')
@@ -56,9 +59,8 @@
 
   const initPage = function() {
     pageConfigs.forEach(config => {
-      const { page, auto, type, apply = 'site' } = config
+      const { auto, type } = config
       if (!auto) { return }
-      if (!(page === 'common' || (apply === 'site' && hostname === page) || (apply === 'url' && pageUrl === page))) { return }
       if (type === 'style') {
         addStyle(config)
       }

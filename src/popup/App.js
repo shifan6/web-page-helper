@@ -17,11 +17,19 @@ function App({ configs, location }) {
   })
 
   const sendMessageToContent = function (message, config, applyAll = true) {
-    const { id, content } = config
+    const { id, content, page, site } = config
     const queryInfo = applyAll ? {} : { currentWindow: true, active: true }
     chrome.tabs.query(queryInfo, (tabs) => {
       [...tabs].forEach(tab => {
-        chrome.tabs.sendMessage(tab.id, { message: message, data: { id, content } })
+        chrome.tabs.sendMessage(tab.id, {
+          message: message,
+          data: {
+            id,
+            content,
+            page,
+            site
+          }
+        })
       })
     })
   }
