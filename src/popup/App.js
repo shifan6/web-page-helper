@@ -165,6 +165,13 @@ function App({ configs, location, isDeveloper }) {
     // 跳转到管理配置页，并区分区分新增/原有配置
     setView('config-manage')
     setNewConfigIds(newIds)
+
+    // 如果配置没有变化，给出提示
+    if (newIds.length === 0) {
+      message.warning('无新增配置', 1)
+    } else {
+      message.success('导入成功', 1)
+    }
   }
   
   const importConfig = function (file) {
