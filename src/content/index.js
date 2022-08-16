@@ -5,7 +5,8 @@
 
   const addStyle = function(it) {
     const { id, content, page, apply = 'site' } = it
-    removeStyle(id)  // 先清除已注入的样式
+    removeStyle(id)  // 清除已注入的样式
+    removeScript(id)  // 清除已注入的脚本（可能修改了配置类型）
     if (!(page === 'common' || (apply === 'site' && hostname === page) || (apply === 'url' && pageUrl === page))) { return }
     const head = document.querySelector('head')
     const style = document.createElement('style')
@@ -24,7 +25,8 @@
   const addScript = function(it) {
     const { id, content, page, apply = 'site' } = it
     if (!(page === 'common' || (apply === 'site' && hostname === page) || (apply === 'url' && pageUrl === page))) { return }
-    removeScript(id)  // 先清除已注入的脚本
+    removeStyle(id)  // 清除已注入的样式（可能修改了配置类型）
+    removeScript(id)  // 清除已注入的脚本
     const head = document.querySelector('head')
     const script = document.createElement('script')
     script.textContent = '(function() {' + content + '})()'  // 每个脚本各自独立

@@ -1,0 +1,15 @@
+.config-manage .config-page {
+  margin-bottom: 15px;
+}
+
+.config-manage .list-name {
+  margin-bottom: 3px;
+}
+
+.config-manage .config-container {
+  padding: 15px;
+  margin: -15px;
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

@@ -1,5 +1,7 @@
 import './ConfigDetail.css'
 import React, { useState } from 'react'
+import { Button } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 const ConfigDetail = function ({ config, hostname, pageUrl, onSave, onCancel, onRemove }) {
   const [ info, setInfo ] = useState(config)
@@ -107,29 +109,45 @@ const ConfigDetail = function ({ config, hostname, pageUrl, onSave, onCancel, on
       </div>
       <div className="config-buttons">
         <div className="left">
-          {
-            info.id &&
-            <span
-              className="remove"
-              onClick={ (e) => { e.preventDefault(); onRemove(info.id) }}
-            >
-            删除
-          </span>
-          }
-        </div>
-        <div className="right">
-          <span
+          <Button
             className="cancel"
-            onClick={ (e) => { e.preventDefault(); onCancel() }}
+            type="link"
+            size="small"
+            icon={<ArrowLeftOutlined />}
+            onClick={e => {
+              e.preventDefault()
+              onCancel()
+            }}
           >
             返回
-          </span>
-          <span
+          </Button>
+        </div>
+        <div className="right">
+          {  
+            info.id &&
+            <Button
+              className="remove"
+              type="link"
+              size="small"
+              onClick={e => {
+                e.preventDefault()
+                onRemove(info.id)
+              }}
+            >
+              删除
+            </Button>
+          }
+          <Button
             className="save"
-            onClick={ (e) => { e.preventDefault(); onSave(info) }}
+            type="link"
+            size="small"
+            onClick={e => {
+              e.preventDefault()
+              onSave(info)
+            }}
           >
             保存
-          </span>
+          </Button>
         </div>
       </div>
     </div>

@@ -2,15 +2,18 @@ import './App.css'
 import React, { useState } from 'react'
 import ConfigList from './components/ConfigList'
 import ConfigDetail from './components/ConfigDetail'
+import ConfigManage from './components/ConfigManage'
 import fileUtils from './utils/file'
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 
-function App({ configs, location }) {
+function App({ configs, location, isDeveloper }) {
   const pageUrl = location && (location.host + location.pathname).replace('www.', '')
   const hostname = location && location.hostname.replace('www.', '')
   const [ pageConfigs, setPageConfigs ] = useState(configs || [])
   const [ view, setView ] = useState('config-list')
   const [ currentConfig, setCurrentConfig ] = useState({})
+  const [ mode, setMode ] = useState(isDeveloper ? 'developer' : 'user')
+  const [ newConfigIds, setNewConfigIds ] = useState([])
   const currentPageConfigs = pageConfigs.filter(config => {
     const { apply = 'site', page } = config
     return page === 'common' || (apply === 'site' && page === hostname) || (apply === 'url' && page === pageUrl)
@@ -112,17 +115,52 @@ function App({ configs, location }) {
     }
   }
 
-  const cancelEdit = function () {
-    setView('config-list')
-  }
-
-  const removeConfig = function (id) {
+  const removeConfig = function (id, back = true) {
     const newConfigs = JSON.parse(JSON.stringify(pageConfigs))
     const index = newConfigs.findIndex(it => it.id === id)
+
+    // 如果配置正在应用中，则取消应用该配置
+    const config = newConfigs[index]
+    if (config.auto) {
+      config.auto = false
+      updateContentByConfig(config)
+    }
+
+    // 删除并更新配置
     newConfigs.splice(index, 1)
-    setView('config-list')
+    back && setView('config-list')
     setPageConfigs(newConfigs)
     updatePageConfigStorage(newConfigs)
+  }
+
+  // 合并原有配置和新导入的配置, 新增配置 auto 为 false
+  const mergeConfigs = function (add = {}, origin = {}, override = true ) {
+    const newConfigs = Object.keys(add).reduce((result, key) => {
+      const current = add[key]
+      const { id, page, type, content } = current
+      const originInfo = origin[id]
+      if (!originInfo) {
+        result.push({
+          ...current,
+          auto: false
+        })     
+      } else if (override && (page !== originInfo.page || type !== originInfo.type || content !== originInfo.content)) {
+        result.push({
+          ...current,
+          auto: false,
+        })
+        delete origin[id]
+      }
+      return result
+    }, [...Object.values(origin)])
+
+    // 更新配置、缓存（不用更新视图，因为新增的配置均是默认关闭）
+    setPageConfigs(newConfigs)
+    updatePageConfigStorage(newConfigs)
+
+    // 跳转到管理配置页，并区分区分新增/原有配置
+    setView('config-manage')
+    setNewConfigIds(Object.keys(add))
   }
   
   const importConfig = function (file) {
@@ -154,39 +192,44 @@ function App({ configs, location }) {
         return result
       }, {})
 
-      // 新增配置 auto 为 false
-      const newConfigs = Object.keys(add).reduce((result, key) => {
+      // 判断是否存在冲突，冲突定义：相同id的配置，配置的页面、类型和内容不一致
+      const hasConflict = Object.keys(add).some(key => {
         const current = add[key]
         const { id, page, type, content } = current
         const originInfo = origin[id]
-        if (originInfo) {
-          // 处理相同id的配置：配置详情一致时过滤，不一致时新增（不对比name、auto）
-          if (page !== originInfo.page || type !== originInfo.type || content !== originInfo.content) {
-            result.push({
-              ...current,
-              auto: false,
-              id: getUniqueId()
-            })
-          }
-        } else {
-          result.push({
-            ...current,
-            auto: false
-          })
-        }
-        return result
-      }, [...Object.values(origin)])
+        if (!originInfo) { return false }
+        return page !== originInfo.page || type !== originInfo.type || content !== originInfo.content
+      })
 
-      // 更新配置、缓存（不用更新视图，因为新增的配置均是默认关闭）
-      setPageConfigs(newConfigs)
-      updatePageConfigStorage(newConfigs)
+      if (hasConflict) {
+        Modal.confirm({
+          title: '',
+          content: '检测到配置冲突，您要用新导入的配置覆盖原有配置吗？',
+          okText: '跳过',
+          okType: 'link',
+          cancelText: '覆盖原有配置',
+          cancelButtonProps: {
+            type: 'link',
+            danger: true
+          },
+          icon: null,
+          onOk() {
+            mergeConfigs(add, origin, false)
+          },
+          onCancel() {
+            mergeConfigs(add, origin, true)
+          },
+        })
+      } else {
+        mergeConfigs(add, origin, false)
+      }
     }
     reader.readAsText(file)
   }
   
-  const exportConfig = async function () {
+  const exportConfig = async function ( configs = pageConfigs ) {
     const data = JSON.stringify({
-      pageConfigs: pageConfigs
+      pageConfigs: configs
     }, undefined, 4)
 
     const blob = new Blob([data], { type: "text/json" })
@@ -200,6 +243,16 @@ function App({ configs, location }) {
         }
       })
     })
+  }
+
+  const ManageConfig = function () {
+    setView('config-manage')
+    setNewConfigIds([])
+  }
+
+  const saveMode = function(val = 'user') {
+    setMode(val)
+    chrome.storage.sync.set({ 'developerMode': val === 'developer' })
   }
 
   const getUniqueId = function () {
@@ -220,12 +273,14 @@ function App({ configs, location }) {
       {
         view === 'config-list' &&
         <ConfigList
+          mode= { mode }
           list={ currentPageConfigs }
           onClose={ closeConfig }
           onOpen={ openConfig }
           onRun={ runConfig }
           onEdit={ editConfig }
           onAdd={ addConfig }
+          onManage={ ManageConfig }
           onImport={ importConfig }
           onExport={ exportConfig }
         />
@@ -237,8 +292,22 @@ function App({ configs, location }) {
           hostname={ hostname }
           pageUrl={ pageUrl }
           onSave={ saveConfig }
-          onCancel={ cancelEdit }
+          onCancel={ () => {setView('config-list')} }
           onRemove={ removeConfig }
+        />
+      }
+      {
+        view === 'config-manage' &&
+        <ConfigManage
+          mode={ mode }
+          newIds={ newConfigIds }
+          list={ pageConfigs }
+          onBack={ () => { setView('config-list') } }
+          onClose={ closeConfig }
+          onOpen={ openConfig }
+          onRemove={ removeConfig }
+          onExport={ exportConfig }
+          onModeChange={ saveMode }
         />
       }
     </div>

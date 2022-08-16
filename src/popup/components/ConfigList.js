@@ -3,7 +3,7 @@ import React from 'react'
 import { Button, Switch, Upload } from 'antd'
 import { EditOutlined, PlayCircleOutlined } from '@ant-design/icons'
 
-const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onExport, onImport }) {
+const ConfigList = function ({ mode, list, onClose, onOpen, onRun, onEdit, onAdd, onManage, onImport }) {
   const handleAutoChange = function (checked, e, config) {
     e.preventDefault()
     switch (checked) {
@@ -37,12 +37,15 @@ const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onEx
                   onClick={ (e) => { e.preventDefault(); onRun(config) }}
                 />
               }
-              <Button
-                type="link"
-                size="small"
-                icon={<EditOutlined/>}
-                onClick={ (e) => { e.preventDefault(); onEdit(config) }}
-              />
+              {
+                mode === 'developer' && 
+                <Button
+                  type="link"
+                  size="small"
+                  icon={<EditOutlined/>}
+                  onClick={ (e) => { e.preventDefault(); onEdit(config) }}
+                />
+              } 
               <Switch
                 size="small"
                 defaultChecked={ config.auto }
@@ -60,13 +63,6 @@ const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onEx
       }
       <div className="config-buttons">
         <div className="left">
-          <Button
-            type="link"
-            size="small"
-            onClick={ (e) => { e.preventDefault(); onExport() }}
-          >
-            导出
-          </Button>
           <Upload
             showUploadList={ false }
             beforeUpload={ (file) => { onImport(file); return false  }}
@@ -75,19 +71,33 @@ const ConfigList = function ({ list, onClose, onOpen, onRun, onEdit, onAdd, onEx
             <Button
               type="link"
               size="small"
-              onClick={ (e) => { e.preventDefault(); onImport() }}
             >
               导入
             </Button>
           </Upload>
         </div>
-        <Button
-          type="link"
-          size="small"
-          onClick={ (e) => { e.preventDefault(); onAdd() }}
-        >
-          新增配置
-        </Button>
+        <div className="right">
+          {
+            mode === 'developer' && 
+            <Button
+              type="link"
+              size="small"
+              onClick={ (e) => { e.preventDefault(); onAdd() }}
+            >
+              新增配置
+            </Button>
+          }
+          {
+            list.length > 0 &&
+            <Button
+              type="link"
+              size="small"
+              onClick={ (e) => { e.preventDefault(); onManage() }}
+            >
+              管理配置
+            </Button>
+          }
+        </div>
       </div>
     </div>
   )
