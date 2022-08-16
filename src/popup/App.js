@@ -14,6 +14,7 @@ function App({ configs, location, isDeveloper }) {
   const [ currentConfig, setCurrentConfig ] = useState({})
   const [ mode, setMode ] = useState(isDeveloper ? 'developer' : 'user')
   const [ newConfigIds, setNewConfigIds ] = useState([])
+  const [ isShowModal, setIsShowModal ] = useState(false)
   const currentPageConfigs = pageConfigs.filter(config => {
     const { apply = 'site', page } = config
     return page === 'common' || (apply === 'site' && page === hostname) || (apply === 'url' && page === pageUrl)
@@ -135,6 +136,7 @@ function App({ configs, location, isDeveloper }) {
 
   // 合并原有配置和新导入的配置, 新增配置 auto 为 false
   const mergeConfigs = function (add = {}, origin = {}, override = true ) {
+    const newIds = []
     const newConfigs = Object.keys(add).reduce((result, key) => {
       const current = add[key]
       const { id, page, type, content } = current
@@ -144,15 +146,17 @@ function App({ configs, location, isDeveloper }) {
           ...current,
           auto: false
         })     
+        newIds.push(id)
       } else if (override && (page !== originInfo.page || type !== originInfo.type || content !== originInfo.content)) {
         result.push({
           ...current,
           auto: false,
         })
+        newIds.push(id)
         delete origin[id]
       }
       return result
-    }, [...Object.values(origin)])
+    }, []).concat([...Object.values(origin)])
 
     // 更新配置、缓存（不用更新视图，因为新增的配置均是默认关闭）
     setPageConfigs(newConfigs)
@@ -160,7 +164,7 @@ function App({ configs, location, isDeveloper }) {
 
     // 跳转到管理配置页，并区分区分新增/原有配置
     setView('config-manage')
-    setNewConfigIds(Object.keys(add))
+    setNewConfigIds(newIds)
   }
   
   const importConfig = function (file) {
@@ -202,8 +206,10 @@ function App({ configs, location, isDeveloper }) {
       })
 
       if (hasConflict) {
+        setIsShowModal(true)
         Modal.confirm({
           title: '',
+          centered: true,
           content: '检测到配置冲突，您要用新导入的配置覆盖原有配置吗？',
           okText: '跳过',
           okType: 'link',
@@ -214,9 +220,11 @@ function App({ configs, location, isDeveloper }) {
           },
           icon: null,
           onOk() {
+            setIsShowModal(false)
             mergeConfigs(add, origin, false)
           },
           onCancel() {
+            setIsShowModal(false)
             mergeConfigs(add, origin, true)
           },
         })
@@ -269,7 +277,10 @@ function App({ configs, location, isDeveloper }) {
   }
 
   return (
-    <div className="App">
+    <div 
+      className="App"
+      style={ isShowModal ? { minHeight: '185px' } : {} }
+    >
       {
         view === 'config-list' &&
         <ConfigList
